@@ -85,3 +85,27 @@ ostream& operator<<(ostream& stream, const Account& rhs){
      }
      return stream;
 }
+
+int Account::getTotalBalance() const{
+     return this->totalBalance_;
+}
+
+int Account::getId() const{
+     return this->id_;
+}
+
+string Account::getFirstName() const{
+     return this->firstName_;
+}
+string Account::getLastName() const{
+     return 
+     this->lastName_;
+}
+
+void Account::displayFunds(){
+     cout << this->firstName_ << " " << this->lastName_ << " Account ID: " << this->id_ << endl;
+     for(int i = 0; i <=7; i++){
+          cout << "    ";
+          funds[i].display();
+     }
+}

@@ -19,6 +19,11 @@ public:
     void displayHistory(); //display all transactions
     void displayHistory(int fundId);  //display all transactions with fundId passed
     friend ostream& operator<<(ostream& stream, const Account& rhs);//need output operators
+    int getTotalBalance() const;
+    int getId() const;
+    string getFirstName() const;
+    string getLastName() const;
+    void displayFunds();
 private:
     string firstName_;
     string lastName_;

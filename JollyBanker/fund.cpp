@@ -36,3 +36,7 @@ string Fund::getName() const{
 int Fund::getId() const{
 	return this->id_;
 }
+
+void Fund::display(){
+	cout << this->name_ << ": $" << this->balance_ << endl;
+}

@@ -18,6 +18,7 @@ public:
     void setBalance(int b);
     string getName() const;
     int getId() const;
+    void display();
 private:
     string name_; //id = 0 -> name = "money market"
     int id_; //0->7

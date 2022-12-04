@@ -24,7 +24,7 @@ public:
     void Display();//display all accounts after transactions handled
 private:
     queue<Transaction> transactionList;
-    BSTree accountList;
+    BSTree accountList; //banker's account list
     //vector<Transaction> failTransactions; ?????? store failed transactions that cannot be stored in related account 
     //yes, because we want to keep track transaction by using vector of fundname. 
     // all actions in account and fund will be printed out
