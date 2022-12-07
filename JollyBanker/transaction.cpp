@@ -135,3 +135,7 @@ void Transaction::display(){
 	}
 
 }
+
+void Transaction::setError(bool error){
+	this->error_ = error;
+}

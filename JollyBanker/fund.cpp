@@ -21,6 +21,21 @@ Fund::Fund(int id, string name)
     this->balance_ = 0;
 }
 
+Fund::Fund(const Fund&F){
+	this->id_ = F.id_;
+	this->name_ = F.name_;
+	this->balance_ = F.balance_;
+}
+
+Fund& Fund::operator=(const Fund& rhs){
+	if(this != &rhs){
+		this->id_ = rhs.id_;
+		this->name_ = rhs.name_;
+		this->balance_ = rhs.balance_;
+	}
+	return *this;
+}
+
 int Fund::getBalance() const{
 	return this->balance_;
 }

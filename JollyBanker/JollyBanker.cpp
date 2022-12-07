@@ -74,6 +74,8 @@ void JollyBanker::handleTransactions(){
     Account *account;
     Account *account2;
     int amount;
+    int fundId;
+    bool f1, f2;
     while(!transactionList.empty()){
         Transaction trans = transactionList.front(); //copy first element of queue to trans
         transactionList.pop(); //delete first element of queue
@@ -89,42 +91,88 @@ void JollyBanker::handleTransactions(){
                     amount = trans.getAmount();
                     if(amount < 0){
                         cerr << "ERROR: Invalid deposit amount" << endl;
+                        trans.setError(true);
                     }else{
                         account->deposit(amount, trans.getPrimaryFundId());
                     }
+                    account->addTransaction(trans);
                 }else{
-                    cerr << "ERROR: Account " << trans.getPrimaryAccountId() << " not found. Deposit refused." << endl;
+                    cerr << "ERROR: Account " << trans.getPrimaryAccountId() << " not found." << endl;
                 }
+
                 break;
             case 'W':
                 //withdraw
                 if(accountList.Retrieve(trans.getPrimaryAccountId(), account)){
                     //found account
-                    amount = trans.getAmount();
+                    // variable 'account' is the account that we must handle with
+                    amount = trans.getAmount(); //amount to withdraw
+
                     if(amount < 0){
                         cerr << "ERROR: Invalid withdraw amount" << endl;
+                        trans.setError(true);
                     }else{
-                        
+                        // W 1234 0 500
+                        // amount = 500
+                        if(!account->withDraw(amount, trans.getPrimaryFundId())){
+                            //withdraw failed
+                            trans.setError(true);
+                        }
                     }
+                    account->addTransaction(trans);
                 }else{
                     cerr << "ERROR: Account " << trans.getPrimaryAccountId() << " not found. Withdraw refused." << endl;
                 }
                 break;
             case 'T':
                 //transfer
-                bool f1 = true;
-                bool f2 = true;
+                //T 1234 0 1234 1 1000
+                //T 1234 0 5678 0 1000
+                f1 = true;
+                f2 = true;
                 if(!accountList.Retrieve(trans.getPrimaryAccountId(), account)){
                     cerr << "ERROR: Account " << trans.getPrimaryAccountId() << " not found. Transferal refused." << endl;
                     f1 = false;
+                    trans.setError(true);
                 }
                 if(!accountList.Retrieve(trans.getSecondaryAccountId(), account2)){
-                    cerr << "ERROR: Account " << trans.getPrimaryAccountId() << " not found. Transferal refused." << endl;
+                    cerr << "ERROR: Account " << trans.getSecondaryAccountId() << " not found. Transferal refused." << endl;
                     f2 = false;
+                    trans.setError(true);
+                }
+
+                if(!f1 && f2){ //f1 false, f2 true
+                    account2->addTransaction(trans);
+                }
+
+                if(f1 && !f2){
+                    account->addTransaction(trans);
                 }
 
                 if(f1 && f2){
-                    //TODO
+                    //transfer from account1 to account2
+                    amount = trans.getAmount();
+                    if(trans.getPrimaryAccountId() == trans.getSecondaryAccountId()){//transfer on itself
+                        if(!account->withDraw(amount, trans.getPrimaryFundId())){ //if withdraw fail -> update err of trans
+                            trans.setError(true);
+                        }else{
+                            if(!account2->deposit(amount, trans.getSecondaryFundId())){ // deposit fail -> update err of trans
+                                trans.setError(true);
+                            }
+                        }
+                        account->addTransaction(trans);
+
+                    }else{
+                        if(!account->withDraw(amount, trans.getPrimaryFundId())){ //if withdraw fail -> update err of trans
+                            trans.setError(true);
+                        }else{
+                            if(!account2->deposit(amount, trans.getSecondaryFundId())){ // deposit fail -> update err of trans
+                                trans.setError(true);
+                            }
+                        }
+                        account->addTransaction(trans);
+                        account2->addTransaction(trans);
+                    }
                 }
                 break;
             case 'A':   

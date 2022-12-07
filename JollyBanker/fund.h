@@ -14,6 +14,8 @@ public:
     Fund();
     Fund(int id, string name, int balance); // create fund with id, name and balance(= 0 or != 0)
     Fund(int id, string name); //balance = 0
+    Fund(const Fund&F); //copy constructor
+    Fund& operator=(const Fund& rhs); //assignment operator
     int getBalance() const;
     void setBalance(int b);
     string getName() const;

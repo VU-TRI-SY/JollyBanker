@@ -33,4 +33,10 @@ void BSTree::Display() const{
     printTree(root_);
 }
 
+bool BSTree::Delete(const int& account_id, Account*& account){
+    Node* res = deleteNode(root_, account_id);
+    account = res->p_acct;
+    return account != nullptr;
+}
+
 // void printTree(Node* root)

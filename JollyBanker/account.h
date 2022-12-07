@@ -8,14 +8,15 @@ Program 5*/
 #include <iostream>
 #include <vector>
 #include "Transaction.h"
-using namespace std;
+// using namespace std;
 
 class Account {
 public:
     Account();
     Account(int id, string firstName, string lastName);
-    void deposit(int amount, int fundId);
-    void withDraw(int amount, int fundId);
+    ~Account();
+    bool deposit(int amount, int fundId);
+    bool withDraw(int amount, int fundId);
     void displayHistory(); //display all transactions
     void displayHistory(int fundId);  //display all transactions with fundId passed
     friend ostream& operator<<(ostream& stream, const Account& rhs);//need output operators
@@ -23,7 +24,10 @@ public:
     int getId() const;
     string getFirstName() const;
     string getLastName() const;
+    void setId(int idx);
     void displayFunds();
+    Fund getFund(int fundId) const; //return a fund with passed id
+    void addTransaction(Transaction transaction);
 private:
     string firstName_;
     string lastName_;

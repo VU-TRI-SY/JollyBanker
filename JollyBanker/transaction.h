@@ -26,6 +26,7 @@ public:
     int getAmount() const;
     string getFirstName() const;
     string getLastName() const;
+    void setError(bool error);
     bool getError() const;
     void display();
 private:

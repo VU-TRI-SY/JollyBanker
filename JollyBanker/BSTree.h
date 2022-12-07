@@ -74,6 +74,49 @@ private:
             printTree(root->right);
         }
     }
+
+    //ancestor is the parent of the node to be deleted
+    Node* minValueNode(Node* node)
+    {
+        Node* current = node;
+    
+        /* loop down to find the leftmost leaf */
+        while (current && current->left != NULL)
+            current = current->left;
+    
+        return current;
+    }
+
+    Node* deleteNode(Node* root, const int& account_id){
+        if(root == nullptr){
+            return root;
+        }
+
+        if(account_id < root->p_acct->getId()){ //key < data of current node -> move to left and delete
+            root->left = deleteNode(root->left, account_id);
+        }else{
+            if(account_id > root->p_acct->getId()){ //key > data of current node -> move to right and delete
+                root->right = deleteNode(root->right, account_id);
+            }else{
+                if(root->left == nullptr){ //deleted node has only right child
+                    Node* temp = root->right;
+                    delete root;
+                    return temp;
+                }else{
+                    if(root->right ==  nullptr){ //deleted node has only right child
+                        Node * temp = root->left;
+                        delete root;
+                        return temp;
+                    }
+                }
+                //deleted Node has 2 children (has sub tree)
+                Node* temp = minValueNode(root->right);
+                root->p_acct->setId(temp->p_acct->getId());
+                root->right = deleteNode(root->right, temp->p_acct->getId());
+            }
+        }
+        return root;
+    }
 };
 #endif
 

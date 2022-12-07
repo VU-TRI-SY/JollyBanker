@@ -1,5 +1,6 @@
+#include<bits/stdc++.h>
 #include "account.h"
-
+using namespace std;
 Account::Account()
 {
      id_ = -1;
@@ -33,16 +34,110 @@ Account::Account(int id, string firstName, string lastName)
      funds.push_back(Fund(7, "Growth Index Fund"));
 }
 
-void Account::deposit(int amount, int fundId){
-     int b = funds[fundId].getBalance(); //old balance
-     funds[fundId].setBalance(b + amount);
-     totalBalance_ += amount;
+Account::~Account(){
+
 }
 
-void Account::withDraw(int amount, int fundId){
-     int b = funds[fundId].getBalance(); //old balance
-     funds[fundId].setBalance(b - amount);
-     totalBalance_ -= amount;
+bool Account::deposit(int amount, int fundId){
+     if(amount < 0){
+          return false;
+     }else{
+          int b = funds[fundId].getBalance(); //old balance
+          funds[fundId].setBalance(b + amount);
+          totalBalance_ += amount;
+          return true;
+     }
+}
+
+bool Account::withDraw(int amount, int fundId){
+     // int b = funds[fundId].getBalance(); //old balance
+     // funds[fundId].setBalance(b - amount);
+     // totalBalance_ -= amount;
+     if(amount < 0){
+          cerr << "ERROR: Invalid withdraw amount" << endl;
+          return false;
+     }else{
+          // W 1234 0 500
+          // amount = 500
+          switch(fundId){
+               case 0:
+                    if(amount > funds[0].getBalance() + funds[1].getBalance()){
+                         cerr << "ERROR: Not enough funds to withdraw " << amount << " from " << firstName_ << " " 
+                         << lastName_ << " " << funds[0].getName() << endl;
+                         return false;
+                    }else{
+                         if(amount > funds[0].getBalance()){ //fund 0 is not enoungh money to withdraw
+                              //ex: amount: 500$, fund 0: 200$, fund 1: 700$
+                              amount -= funds[0].getBalance(); //amount = 500 - 200 = 300
+                              // account->withDraw(account->getFund(0).getBalance(), 0); //withdraw all money from fund 0 (200$)
+                              funds[0].setBalance(0); //withdraw all money from fund 0 (200$)
+                              funds[1].setBalance(funds[1].getBalance() - amount); //withdraw 300$ from fund 1
+                         }else{
+                              funds[0].setBalance(funds[0].getBalance() - amount); //withdraw 500$ from fund 0
+                         }
+                    }
+                    return true;
+                    break;
+               case 1:
+                    if(amount > funds[0].getBalance() + funds[1].getBalance()){
+                         cerr << "ERROR: Not enough funds to withdraw " << amount << " from " << firstName_ << " " 
+                         << lastName_ << " " << funds[1].getName() << endl;
+                         return false;
+                    }else{
+                         if(amount > funds[1].getBalance()){ 
+                              amount -= funds[1].getBalance(); 
+                              funds[1].setBalance(0); 
+                              funds[0].setBalance(funds[0].getBalance() - amount); 
+                         }else{
+                              funds[1].setBalance(funds[1].getBalance() - amount); 
+                         }
+                    }
+                    return true;
+                    break;
+               case 2:
+                    if(amount > funds[2].getBalance() + funds[3].getBalance()){
+                         cerr << "ERROR: Not enough funds to withdraw " << amount << " from " << firstName_ << " " 
+                         << lastName_ << " " << funds[2].getName() << endl;
+                         return false;
+                    }else{
+                         if(amount > funds[2].getBalance()){ 
+                              amount -= funds[2].getBalance(); 
+                              funds[2].setBalance(0); 
+                              funds[3].setBalance(funds[3].getBalance() - amount); 
+                         }else{
+                              funds[2].setBalance(funds[2].getBalance() - amount); 
+                         }
+                    }
+                    return true;
+                    break;
+               case 3:
+                    if(amount > funds[2].getBalance() + funds[3].getBalance()){
+                         cerr << "ERROR: Not enough funds to withdraw " << amount << " from " << firstName_ << " " 
+                         << lastName_ << " " << funds[3].getName() << endl;
+                         return false;
+                    }else{
+                         if(amount > funds[3].getBalance()){ 
+                              amount -= funds[3].getBalance(); 
+                              funds[3].setBalance(0); 
+                              funds[2].setBalance(funds[2].getBalance() - amount); 
+                         }else{
+                              funds[3].setBalance(funds[3].getBalance() - amount); 
+                         }
+                    }
+                    return true;
+                    break;
+               default:
+                    if(amount > funds[fundId].getBalance()){
+                         cerr << "ERROR: Not enough funds to withdraw " << amount << " from " << firstName_ << " " 
+                         << lastName_ << " "<< funds[fundId].getName() << endl;
+                         return false;
+                    }else{
+                         funds[fundId].setBalance(funds[fundId].getBalance() - amount);
+                    }
+                    return true;
+                    break;
+          }
+     }
 }
 
 void Account::displayHistory(){
@@ -109,3 +204,21 @@ void Account::displayFunds(){
           funds[i].display();
      }
 }
+
+Fund Account::getFund(int fundId) const{
+     return this->funds[fundId];
+}
+
+void Account::addTransaction(Transaction transaction){
+     transactions.push_back(transaction);
+}
+
+void Account::setId(int idx){
+     this->id_ = idx;
+}
+
+
+
+
+
+
