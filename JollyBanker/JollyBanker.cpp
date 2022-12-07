@@ -207,6 +207,7 @@ void JollyBanker::handleTransactions(){
 void JollyBanker::Display(){
     cout << "FINAL BALANCES:" << endl;
     accountList.Display();
+    return;
 }
 int main(int argc, char* argv[])
 {

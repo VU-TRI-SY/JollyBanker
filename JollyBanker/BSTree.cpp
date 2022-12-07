@@ -6,11 +6,12 @@ BSTree::BSTree(){
 }
 
 BSTree::BSTree(const BSTree& tree){
-    //go through all nodes off input 'tree' and insert to this true
+    
 }
 
 BSTree::~BSTree(){
-
+    cleantree(root_);
+    root_ = nullptr;
 }
 
 bool BSTree::Insert(Account* account){

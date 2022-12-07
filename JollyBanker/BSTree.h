@@ -76,6 +76,23 @@ private:
             printTree(root->right);
         }
     }
+    void cleantree(Node *root){
+        if(root->left != nullptr)
+            cleantree(root->left);
+        if(root->right != nullptr)
+            cleantree(root->right);
+        delete root->p_acct;
+        delete root;
+    }
+
+    Node* copyTree(Node *root) {
+        if(root != nullptr){
+            Node* new_root = new Node(root->p_acct);
+            new_root->left = copyTree(root->left);
+            new_root->right = copyTree(root->right);
+            return new_root;
+        } else return nullptr;
+    }
 
     //ancestor is the parent of the node to be deleted
     Node* minValueNode(Node* node)
