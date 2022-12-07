@@ -17,7 +17,7 @@ public:
     Transaction(char type, int primaryAccountId, int primaryFundId);
     Transaction(char type, int primaryAccountId, string firstName, string lastName);
     Transaction(const Transaction& src);
-    Transaction operator=(const Transaction& src);
+    Transaction& operator=(const Transaction& src);
     int getType() const;
     int getPrimaryAccountId() const;
     int getPrimaryFundId() const;

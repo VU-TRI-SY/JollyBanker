@@ -34,6 +34,26 @@ Account::Account(int id, string firstName, string lastName)
      funds.push_back(Fund(7, "Growth Index Fund"));
 }
 
+Account::Account(const Account& rhs){
+     id_ = rhs.id_;
+     firstName_ = rhs.firstName_;
+     lastName_ = rhs.lastName_;
+     totalBalance_ = rhs.totalBalance_;
+     funds = rhs.funds;
+     transactions = rhs.transactions;
+}
+Account& Account::operator=(const Account& rhs){
+     if(this != &rhs){
+          id_ = rhs.id_;
+          firstName_ = rhs.firstName_;
+          lastName_ = rhs.lastName_;
+          totalBalance_ = rhs.totalBalance_;
+          funds = rhs.funds;
+          transactions = rhs.transactions;
+     }
+     return *this;
+}
+
 Account::~Account(){
 
 }
@@ -141,7 +161,7 @@ bool Account::withDraw(int amount, int fundId){
 }
 
 void Account::displayHistory(){
-     cout << "Transaction History for " << this->firstName_ << " " << this->lastName_ << " by fund." << endl;
+     cout << "Transaction History for " << this->lastName_ << " " << this->firstName_  << " by fund." << endl;
      for(int idx = 0; idx <= 7; idx++){
           //find that there is a transaction that related to this fund id
           int found = false; //assume that there is no transaction related to fundId (id)
@@ -160,11 +180,12 @@ void Account::displayHistory(){
                          transactions[i].display();
                     }
                }
+               
           }
      }
 }
 void Account::displayHistory(int fundId){
-     cout << "Transaction History for " << this->firstName_ << " " << this->lastName_ << this->funds[fundId].getName()
+     cout << "Transaction History for " << this->lastName_ << " " << this->firstName_  << " " << this->funds[fundId].getName()
      << ": $" << this->funds[fundId].getBalance() << endl;
      for(int i = 0; i < transactions.size();i++){
           if(transactions[i].getPrimaryFundId() == fundId || transactions[i].getSecondaryFundId() == fundId){

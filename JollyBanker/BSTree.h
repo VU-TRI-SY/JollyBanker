@@ -17,11 +17,15 @@ public:
     // Delete object, first parameter is the ID of the account
     // second parameter holds pointer to found object, NULL if not found
     bool Delete(const int& account_id, Account*& account);
-    BSTree& operator=(const BSTree& tree);
+    // BSTree& operator=(const BSTree& tree);
     // displays the contents of a tree to cout; you could also overload operator << 
     void Display() const;
-    int Size() const;
-    friend ostream operator<< (ostream&os, const BSTree& tree);
+    // int Size() const;
+    // friend ostream operator<< (ostream&os, const BSTree& tree);
+    void printSt(){
+        cout << root_->p_acct->getId() << endl;
+        cout << root_->right->p_acct->getId() << endl;
+    }
     
 private:
     struct Node
@@ -31,24 +35,11 @@ private:
         Node* left;
         Node(Account* account){
             p_acct = account;
+            right = nullptr;
+            left = nullptr;
         }
     };
-
     Node* root_;
-    Node* insert(Node* root, Account* account){
-        if(root == nullptr){
-            return new Node(account);
-        }else{
-            if(account->getId() < root->p_acct->getId()){
-                root->left = insert(root->left, account);
-            }else{
-                if(account->getId() > root->p_acct->getId()){
-                    root->right = insert(root->right, account);
-                }
-            }
-            return root;
-        }
-    }
     Node* retrieve(Node* root, const int& account_id) const{
         if(root == nullptr){
             return nullptr;
@@ -71,6 +62,17 @@ private:
             printTree(root->left);
             root->p_acct->displayFunds();
             cout << endl;
+            printTree(root->right);
+        }
+    }
+
+    void printTree(Node* root, ostream &os) const{
+        if(root == nullptr){
+            return;
+        }else{
+            printTree(root->left);
+            root->p_acct->displayFunds();
+            os << endl;
             printTree(root->right);
         }
     }
@@ -117,6 +119,7 @@ private:
         }
         return root;
     }
+
 };
 #endif
 

@@ -26,9 +26,11 @@ bool JollyBanker::loadTransactions(const char* fileName){
     int amount_;
     string firstName_;
     string lastName_;
-	while (infile.eof()) //if haven't read to the end of the file
+    // cout << infile.eof() << endl;
+	while (!infile.eof()) //if haven't read to the end of the file
 	{
 		infile >> type_;
+        // cout << type_ << endl;
         switch(type_){
             case 'D':
                 infile >> primaryAccountId_;
@@ -41,6 +43,7 @@ bool JollyBanker::loadTransactions(const char* fileName){
                 infile >> primaryFundId_;
                 infile >> amount_;
                 transactionList.push(Transaction(type_, primaryAccountId_, primaryFundId_, amount_));
+
                 break;
             case 'T':
                 infile >> primaryAccountId_;
@@ -49,15 +52,18 @@ bool JollyBanker::loadTransactions(const char* fileName){
                 infile >> secondaryFundId_;
                 infile >> amount_;
                 transactionList.push(Transaction(type_, primaryAccountId_, primaryFundId_, secondaryAccountId_, secondaryFundId_, amount_));
+               
                 break;
             case 'A':
                 infile >> primaryAccountId_;
                 transactionList.push(Transaction(type_, primaryAccountId_));
+               
                 break;
             case 'F':
                 infile >> primaryAccountId_;
                 infile >> primaryFundId_;
                 transactionList.push(Transaction(type_, primaryAccountId_, primaryFundId_));
+               
                 break;
             case 'O':
                 infile >> primaryAccountId_;
@@ -71,21 +77,16 @@ bool JollyBanker::loadTransactions(const char* fileName){
 	return true;
 }
 void JollyBanker::handleTransactions(){
-    Account *account;
-    Account *account2;
+    Account *account = nullptr;
+    Account *account2 = nullptr;
     int amount;
     int fundId;
     bool f1, f2;
     while(!transactionList.empty()){
         Transaction trans = transactionList.front(); //copy first element of queue to trans
         transactionList.pop(); //delete first element of queue
-        /// trans is the transaction that we must handle
         switch(trans.getType()){
             case 'D':
-                //deposit
-                //1. check if account exists -> findAccount
-                //2. if account exists, deposit
-                //3. if account doesn't exist, create account
                 if(accountList.Retrieve(trans.getPrimaryAccountId(), account)){
                     //found account
                     amount = trans.getAmount();
@@ -125,9 +126,6 @@ void JollyBanker::handleTransactions(){
                 }
                 break;
             case 'T':
-                //transfer
-                //T 1234 0 1234 1 1000
-                //T 1234 0 5678 0 1000
                 f1 = true;
                 f2 = true;
                 if(!accountList.Retrieve(trans.getPrimaryAccountId(), account)){
@@ -179,6 +177,7 @@ void JollyBanker::handleTransactions(){
                 //add account
                 if(accountList.Retrieve(trans.getPrimaryAccountId(), account)){
                     account->displayHistory();
+                    cout << endl;
                 }else{
                     cerr << "ERROR: Account " << trans.getPrimaryAccountId() << " not found. Display refused." << endl;
                 }
@@ -187,12 +186,12 @@ void JollyBanker::handleTransactions(){
                 //display by fund id
                 if(accountList.Retrieve(trans.getPrimaryAccountId(), account)){
                     account->displayHistory(trans.getPrimaryFundId());
+                    cout << endl;
                 }else{
                     cerr << "ERROR: Account " << trans.getPrimaryAccountId() << " not found. Display refused." << endl;
                 }
                 break;
             case 'O':
-                //open account
                 if(accountList.Retrieve(trans.getPrimaryAccountId(), account)){
                     cerr << "ERROR: Account " << trans.getPrimaryAccountId() << " is already open. Transaction refused." << endl;
                 }else{
@@ -204,15 +203,17 @@ void JollyBanker::handleTransactions(){
     }
 }
 
+
 void JollyBanker::Display(){
     cout << "FINAL BALANCES:" << endl;
-    cout << accountList;
+    accountList.Display();
 }
 int main(int argc, char* argv[])
 {
     JollyBanker JB;
     if(JB.loadTransactions(argv[1])){
-        
+        JB.handleTransactions();
+        JB.Display();
     }else{
         return 0;
     }

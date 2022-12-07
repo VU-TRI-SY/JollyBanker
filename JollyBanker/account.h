@@ -14,6 +14,8 @@ class Account {
 public:
     Account();
     Account(int id, string firstName, string lastName);
+    Account(const Account& rhs);
+    Account& operator=(const Account& rhs);
     ~Account();
     bool deposit(int amount, int fundId);
     bool withDraw(int amount, int fundId);
