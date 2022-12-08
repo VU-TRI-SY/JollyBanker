@@ -137,6 +137,10 @@ void Transaction::setPrimaryFundId(int fundId){
 	this->primaryFundId_ = fundId;
 }
 
+void Transaction::setAmount(int amount){
+	this->amount_ = amount;
+}
+
 
 void Transaction::display(){
 	if(this->type_ == 'D' || this->type_ == 'W'){
