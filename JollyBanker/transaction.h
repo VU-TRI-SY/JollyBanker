@@ -24,6 +24,7 @@ public:
     int getSecondaryAccountId() const;
     int getSecondaryFundId() const;
     int getAmount() const;
+    void setPrimaryFundId(int fundId);
     string getFirstName() const;
     string getLastName() const;
     void setError(bool error);

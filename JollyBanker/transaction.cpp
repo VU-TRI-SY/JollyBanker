@@ -133,6 +133,11 @@ bool Transaction::getError() const{
 	return error_;
 }
 
+void Transaction::setPrimaryFundId(int fundId){
+	this->primaryFundId_ = fundId;
+}
+
+
 void Transaction::display(){
 	if(this->type_ == 'D' || this->type_ == 'W'){
 		cout << this->type_ << " " << this-> primaryAccountId_ << " " << this->primaryFundId_ << " " << this->amount_;

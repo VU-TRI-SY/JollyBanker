@@ -18,7 +18,7 @@ public:
     Account& operator=(const Account& rhs);
     ~Account();
     bool deposit(int amount, int fundId);
-    bool withDraw(int amount, int fundId);
+    bool withDraw(int amount, int fundId, Transaction& trans);
     void displayHistory(); //display all transactions
     void displayHistory(int fundId);  //display all transactions with fundId passed
     friend ostream& operator<<(ostream& stream, const Account& rhs);//need output operators

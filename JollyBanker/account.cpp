@@ -69,7 +69,7 @@ bool Account::deposit(int amount, int fundId){
      }
 }
 
-bool Account::withDraw(int amount, int fundId){
+bool Account::withDraw(int amount, int fundId, Transaction& trans){
      // int b = funds[fundId].getBalance(); //old balance
      // funds[fundId].setBalance(b - amount);
      // totalBalance_ -= amount;
@@ -92,6 +92,7 @@ bool Account::withDraw(int amount, int fundId){
                               // account->withDraw(account->getFund(0).getBalance(), 0); //withdraw all money from fund 0 (200$)
                               funds[0].setBalance(0); //withdraw all money from fund 0 (200$)
                               funds[1].setBalance(funds[1].getBalance() - amount); //withdraw 300$ from fund 1
+                              trans.setPrimaryFundId(1);
                          }else{
                               funds[0].setBalance(funds[0].getBalance() - amount); //withdraw 500$ from fund 0
                          }
@@ -108,6 +109,7 @@ bool Account::withDraw(int amount, int fundId){
                               amount -= funds[1].getBalance(); 
                               funds[1].setBalance(0); 
                               funds[0].setBalance(funds[0].getBalance() - amount); 
+                              trans.setPrimaryFundId(0);
                          }else{
                               funds[1].setBalance(funds[1].getBalance() - amount); 
                          }
@@ -124,6 +126,7 @@ bool Account::withDraw(int amount, int fundId){
                               amount -= funds[2].getBalance(); 
                               funds[2].setBalance(0); 
                               funds[3].setBalance(funds[3].getBalance() - amount); 
+                              trans.setPrimaryFundId(3);
                          }else{
                               funds[2].setBalance(funds[2].getBalance() - amount); 
                          }
@@ -140,6 +143,7 @@ bool Account::withDraw(int amount, int fundId){
                               amount -= funds[3].getBalance(); 
                               funds[3].setBalance(0); 
                               funds[2].setBalance(funds[2].getBalance() - amount); 
+                              trans.setPrimaryFundId(2);
                          }else{
                               funds[3].setBalance(funds[3].getBalance() - amount); 
                          }

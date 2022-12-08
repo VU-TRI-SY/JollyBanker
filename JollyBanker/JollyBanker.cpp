@@ -82,6 +82,7 @@ void JollyBanker::handleTransactions(){
     int amount;
     int fundId;
     bool f1, f2;
+    Transaction trans2;
     while(!transactionList.empty()){
         Transaction trans = transactionList.front(); //copy first element of queue to trans
         transactionList.pop(); //delete first element of queue
@@ -115,9 +116,16 @@ void JollyBanker::handleTransactions(){
                     }else{
                         // W 1234 0 500
                         // amount = 500
-                        if(!account->withDraw(amount, trans.getPrimaryFundId())){
+                        trans2 = trans;
+                        trans2.setPrimaryFundId(-1);
+                        if(!account->withDraw(amount, trans.getPrimaryFundId(), trans2)){
                             //withdraw failed
                             trans.setError(true);
+                        }else{
+                            if(trans2.getPrimaryFundId() != -1){
+                                //transfer from other fund
+                                account->addTransaction(trans2);
+                            }
                         }
                     }
                     account->addTransaction(trans);
@@ -150,8 +158,9 @@ void JollyBanker::handleTransactions(){
                 if(f1 && f2){
                     //transfer from account1 to account2
                     amount = trans.getAmount();
+                    trans2 = trans;
                     if(trans.getPrimaryAccountId() == trans.getSecondaryAccountId()){//transfer on itself
-                        if(!account->withDraw(amount, trans.getPrimaryFundId())){ //if withdraw fail -> update err of trans
+                        if(!account->withDraw(amount, trans.getPrimaryFundId(), trans2)){ //if withdraw fail -> update err of trans
                             trans.setError(true);
                         }else{
                             if(!account2->deposit(amount, trans.getSecondaryFundId())){ // deposit fail -> update err of trans
@@ -159,9 +168,12 @@ void JollyBanker::handleTransactions(){
                             }
                         }
                         account->addTransaction(trans);
+                        if(trans2.getPrimaryFundId() != -1){
+                            account->addTransaction(trans2);
+                        }
 
                     }else{
-                        if(!account->withDraw(amount, trans.getPrimaryFundId())){ //if withdraw fail -> update err of trans
+                        if(!account->withDraw(amount, trans.getPrimaryFundId(), trans2)){ //if withdraw fail -> update err of trans
                             trans.setError(true);
                         }else{
                             if(!account2->deposit(amount, trans.getSecondaryFundId())){ // deposit fail -> update err of trans
@@ -170,6 +182,10 @@ void JollyBanker::handleTransactions(){
                         }
                         account->addTransaction(trans);
                         account2->addTransaction(trans);
+                        if(trans2.getPrimaryFundId() != -1){
+                            account->addTransaction(trans2);
+                            account2->addTransaction(trans2);
+                        }
                     }
                 }
                 break;
