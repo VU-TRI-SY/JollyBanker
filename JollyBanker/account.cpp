@@ -175,7 +175,11 @@ void Account::displayHistory(){
           if(found){
                cout << funds[idx].getName() << ": $" << funds[idx].getBalance() << endl;
                for(int i = 0; i < transactions.size();i++){
-                    if(transactions[i].getPrimaryFundId() == idx || transactions[i].getSecondaryFundId() == idx){
+                    if(transactions[i].getPrimaryFundId() == idx && transactions[i].getPrimaryAccountId() == this->id_){
+                         cout << "  ";
+                         transactions[i].display();
+                    }
+                    if(transactions[i].getSecondaryFundId() == idx && transactions[i].getSecondaryAccountId() == this->id_){
                          cout << "  ";
                          transactions[i].display();
                     }
@@ -188,7 +192,11 @@ void Account::displayHistory(int fundId){
      cout << "Transaction History for " << this->lastName_ << " " << this->firstName_  << " " << this->funds[fundId].getName()
      << ": $" << this->funds[fundId].getBalance() << endl;
      for(int i = 0; i < transactions.size();i++){
-          if(transactions[i].getPrimaryFundId() == fundId || transactions[i].getSecondaryFundId() == fundId){
+          if(transactions[i].getPrimaryFundId() == fundId && transactions[i].getPrimaryAccountId() == this->id_){
+               cout << "  ";
+               transactions[i].display();
+          }
+          if(transactions[i].getSecondaryFundId() == fundId && transactions[i].getSecondaryAccountId() == this->id_){
                cout << "  ";
                transactions[i].display();
           }
