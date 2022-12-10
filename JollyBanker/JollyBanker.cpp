@@ -101,7 +101,6 @@ void JollyBanker::handleTransactions(){
                 }else{
                     cerr << "ERROR: Account " << trans.getPrimaryAccountId() << " not found." << endl;
                 }
-
                 break;
             case 'W':
                 //withdraw
@@ -117,7 +116,7 @@ void JollyBanker::handleTransactions(){
                         // W 1234 0 500
                         // amount = 500
                         trans2 = trans;
-                        trans2.setPrimaryFundId(-1);
+                        trans2.setPrimaryFundId(-1); //-1 means trans is invalid
                         if(!account->withDraw(amount, trans.getPrimaryFundId(), trans2)){
                             //withdraw failed
                             trans.setError(true);
@@ -160,6 +159,7 @@ void JollyBanker::handleTransactions(){
                     //transfer from account1 to account2
                     amount = trans.getAmount();
                     trans2 = trans;
+                    trans2.setPrimaryFundId(-1);
                     if(trans.getPrimaryAccountId() == trans.getSecondaryAccountId()){//transfer on itself
                         if(!account->withDraw(amount, trans.getPrimaryFundId(), trans2)){ //if withdraw fail -> update err of trans
                             trans.setError(true);
@@ -182,6 +182,7 @@ void JollyBanker::handleTransactions(){
                                 trans.setError(true);
                             }
                         }
+                        
                         if(trans2.getPrimaryFundId() != -1){
                             trans.setAmount(amount-trans2.getAmount()); //update amount of trans 1
                             //add transaction to both account sequentially
@@ -190,7 +191,6 @@ void JollyBanker::handleTransactions(){
                             account2->addTransaction(trans);
                             account2->addTransaction(trans2);
                         }else{
-
                             account->addTransaction(trans);
                             account2->addTransaction(trans);
                         }

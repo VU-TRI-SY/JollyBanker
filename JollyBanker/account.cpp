@@ -59,6 +59,10 @@ Account::~Account(){
 }
 
 bool Account::deposit(int amount, int fundId){
+     if(fundId < 0 || fundId > 7){
+          cerr << "ERROR: FundID " << fundId << " is invalid " << endl;
+          return false;
+     }
      if(amount < 0){
           return false;
      }else{
@@ -73,6 +77,10 @@ bool Account::withDraw(int amount, int fundId, Transaction& trans){
      // int b = funds[fundId].getBalance(); //old balance
      // funds[fundId].setBalance(b - amount);
      // totalBalance_ -= amount;
+     if(fundId < 0 || fundId > 7){
+          cerr << "ERROR: FundID " << fundId << " is invalid " << endl;
+          return false;
+     }
      if(amount < 0){
           cerr << "ERROR: Invalid withdraw amount" << endl;
           return false;
@@ -196,7 +204,13 @@ void Account::displayHistory(){
           }
      }
 }
+
 void Account::displayHistory(int fundId){
+     if(fundId < 0 || fundId > 7){
+          cerr << "ERROR: FundID " << fundId << " is invalid " << endl;
+          return;
+     }
+
      cout << "Transaction History for " << this->lastName_ << " " << this->firstName_  << " " << this->funds[fundId].getName()
      << ": $" << this->funds[fundId].getBalance() << endl;
      for(int i = 0; i < transactions.size();i++){
@@ -210,6 +224,7 @@ void Account::displayHistory(int fundId){
           }
      }
 }
+
 ostream& operator<<(ostream& stream, const Account& rhs){
      stream << rhs.firstName_ << " " << rhs.lastName_ << " Account ID: " << rhs.id_ << endl;
      for(int i = 0; i <= 7; i++){
