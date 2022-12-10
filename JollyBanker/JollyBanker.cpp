@@ -219,8 +219,13 @@ void JollyBanker::handleTransactions(){
                 if(accountList.Retrieve(trans.getPrimaryAccountId(), account)){
                     cerr << "ERROR: Account " << trans.getPrimaryAccountId() << " is already open. Transaction refused." << endl;
                 }else{
-                    account = new Account(trans.getPrimaryAccountId(), trans.getFirstName(), trans.getLastName());
-                    accountList.Insert(account);
+                    if(trans.getPrimaryAccountId() < 0){
+                        cerr << "ERROR: Invalid account id" << endl;
+                    }else{
+                        account = new Account(trans.getPrimaryAccountId(), trans.getFirstName(), trans.getLastName());
+                        accountList.Insert(account);
+
+                    }
                 }
                 break;
         }
